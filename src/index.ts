@@ -362,14 +362,22 @@ function raw(str: string): number {
  * @returns
  */
 function getScrollOffset(el: Element) {
-  let p = el.parentElement
-  while (p) {
-    if (p.scrollLeft || p.scrollTop) {
-      return { x: p.scrollLeft, y: p.scrollTop }
+  let current = el.parentElement;
+
+  // Automatically try to detect a 'parentOfParent' scenario by checking a condition.
+  // Here, we consider 'parentOfParent' as a class name. Adjust the condition as needed.
+  while (current) {
+    // If the current element's parent has the 'parentOfParent' class, set current to its parent
+    if (current.parentElement && current.parentElement.classList.contains('parentOfParent')) {
+      current = current.parentElement;
     }
-    p = p.parentElement
+
+    if (current.scrollLeft || current.scrollTop) {
+      return { x: current.scrollLeft, y: current.scrollTop };
+    }
+    current = current.parentElement;
   }
-  return { x: 0, y: 0 }
+  return { x: 0, y: 0 };
 }
 
 /**
